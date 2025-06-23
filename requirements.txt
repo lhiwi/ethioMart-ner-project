@@ -1,0 +1,22 @@
+pytest
+# Core data-and-scraping
+telethon>=1.28.0
+pandas>=2.0.0
+
+# Text processing
+regex>=2022.10.31
+
+# Transformers & tokenizers (for later tasks)
+transformers>=4.30.0
+datasets>=2.15.0
+
+# Model interpretability
+shap>=0.42.0
+lime>=0.2.0
+
+# (Optional) image handling
+Pillow>=9.5.0
+opencv-python>=4.8.0
+
+# Utilities
+python-dotenv>=0.21.0

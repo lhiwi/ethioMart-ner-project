@@ -1,0 +1,15 @@
+# virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Data directories
+data/
+
+# VSCode settings
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
