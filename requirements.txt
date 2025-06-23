@@ -1,4 +1,11 @@
-pytest
+# Testing
+pytest>=7.0.0
+
+# Interactive notebooks
+jupyter>=1.0.0
+ipykernel>=6.0.0
+matplotlib>=3.7.0
+
 # Core data-and-scraping
 telethon>=1.28.0
 pandas>=2.0.0
@@ -14,9 +21,11 @@ datasets>=2.15.0
 shap>=0.42.0
 lime>=0.2.0
 
-# (Optional) image handling
+# image handling
 Pillow>=9.5.0
 opencv-python>=4.8.0
 
 # Utilities
 python-dotenv>=0.21.0
++openpyxl>=3.0.0
+
