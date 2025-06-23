@@ -1,33 +1,58 @@
-```markdown
 # EthioMart Amharic NER
 
 **Transform Telegram e-commerce chatter into structured data for vendor scoring and micro-lending.**
 
-
-## 🚀 Project Overview
+##  Project Overview
 
 This repository implements a pipeline to:
 
 1. **Ingest** messages (text, images) from Ethiopian Amharic-language Telegram channels  
 2. **Preprocess** and clean raw text for NER tasks  
 3. **Label**, **fine-tune**, and **interpret** transformer-based NER models  
-4. **Generate** vendor scorecards for EthioMart’s micro-lending
-
-Task 1 (Data Ingestion & Preprocessing) is complete on the `task-1` branch. See [notebooks/01_data_ingestion.ipynb] and [scripts/ingest_data.py] for details.
+4. **Generate** vendor scorecards for EthioMart’s micro-lending  
 
 
-## 📁 Repository Structure
+## Progress to Date
+
+- **Task 1: Data Ingestion & Preprocessing**  
+  We selected five representative Telegram channels and streamed 500 messages from each, producing a 2,500-row dataset with metadata (`date`, `sender`, `views`, `channel`) and raw text. A custom `clean_text()` function removed non-Amharic characters and noise, reducing average message length by 12.5 %. The entire pipeline was encapsulated in `scripts/ingest_data.py`, yielding a reproducible `data/raw/telegram_data.csv`.
+
+- **Task 2: CoNLL Labeling**  
+  From the cleaned corpus, we sampled 50 messages, tokenized them using NLTK’s `WordPunctTokenizer`, and generated a CoNLL template. In VS Code, each token was annotated with `B-Product`/`I-Product`, `B-PRICE`/`I-PRICE`, and `B-LOC`/`I-LOC` tags, producing `data/raw/labels_sample.conll`. Annotation was verified by reloading in Colab to ensure proper formatting and coverage.
+
+These completed tasks establish a high-quality dataset and annotation set, ready for Task 3: fine-tuning a transformer-based NER model.
+
+
+##  Future Work
+
+- **Task 3: Model Fine-Tuning**  
+  Convert `labels_sample.conll` into a Hugging Face `datasets` object, align token-level labels with an XLM-RoBERTa tokenizer, and fine-tune for Amharic NER.
+
+- **Expand Annotation**  
+  Increase manual labeling from 50 to 200–500 messages to improve model robustness and domain coverage.
+
+- **Media & Metadata Ingestion**  
+  Extend the scraper to download images and documents into `data/raw/media/`, and capture additional metadata (e.g., replies, forwards) for richer feature engineering.
+
+- **Model Comparison & Interpretability**  
+  Evaluate multiple transformer variants (mBERT, DistilBERT) and apply SHAP/LIME to explain model decisions and ensure trust.
+
+- **Vendor Scorecard Development**  
+  Combine NER outputs with engagement metrics (views, posting frequency) to compute lending scores and generate vendor profiles for micro-lending decisions.
+
+
+##  Repository Structure
 
 ```
-
 ethioMart-ner/
 ├── .github/                 # CI workflows (Python-CI)
-├── .vscode/                 # VS Code settings (auto-format, Jupyter)
+├── .vscode/                 # VS Code settings
 ├── data/
-│   ├── raw/                 # ingested CSVs & media
+│   ├── raw/                 # telegram\_data.csv, labels\_sample.conll, media/
 │   └── processed/           # downstream artifacts
 ├── notebooks/               # Colab & Jupyter prototypes
-│   └── 01\_data\_ingestion.ipynb
+│   ├── 01\_data\_ingestion.ipynb
+│   └── labeling.ipynb
 ├── scripts/                 # automated entry-points
 │   └── ingest\_data.py
 ├── src/                     # core modules
@@ -38,7 +63,7 @@ ethioMart-ner/
 ├── requirements.txt         # pinned dependencies
 └── README.md                # project overview & setup
 
-````
+```
 
 ##  Installation & Setup
 
@@ -79,7 +104,7 @@ ethioMart-ner/
      ```
 
 
-##  Usage
+## Usage
 
 ### Interactive prototype (Colab or Jupyter)
 
@@ -91,6 +116,7 @@ code notebooks/01_data_ingestion.ipynb
 # or in Colab:
 start "https://colab.research.google.com/github/lhiwi/ethioMart-ner-project/blob/task-1/notebooks/01_data_ingestion.ipynb"
 ```
+
 ### Automated ingestion
 
 ```bash
@@ -99,18 +125,7 @@ python -m scripts.ingest_data
 # produces data/raw/telegram_data.csv
 ```
 
-##  Next Steps
 
-* **Task 2**: Label cleaned text in CoNLL format
-* **Task 3**: Fine-tune multilingual transformers for Amharic NER
-* **Task 4**: Compare, interpret, and select the best model
-* **Task 5**: Build vendor scorecards for micro-lending
 
----
 
-## 📝 License & Credits
 
-This project is part of the 10 Academy: Artificial Intelligence Mastery curriculum, guided by Mahlet, Rediet, Kerod, and Rehmet.
-
-```
-```
