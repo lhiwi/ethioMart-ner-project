@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: windows-latest
     env:
-      PYTHONUTF8: 1  # Fixes Unicode issues on Windows
+      PYTHONUTF8: 
 
     steps:
     - name: Checkout code
@@ -21,30 +21,43 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Create venv
+    - name: Create virtual environment
       shell: pwsh
       run: |
         python -m venv .venv
-        # Permanently add venv to PATH
-        $venvPath = "$env:GITHUB_WORKSPACE\.venv\Scripts"
-        echo "$venvPath" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        # Verify venv creation
+        if (-not (Test-Path .\.venv\Scripts\python.exe)) {
+          Write-Error "Virtual environment not created properly!"
+          Get-ChildItem -Recurse .\.venv
+          exit 1
+        }
 
     - name: Install dependencies
       shell: pwsh
       run: |
-        pip install --upgrade pip
-        pip install -r requirements.txt
+        .\.venv\Scripts\python -m pip install --upgrade pip
+        .\.venv\Scripts\pip install -r requirements.txt
 
-    - name: Verify installations
+    - name: Add venv to system PATH
       shell: pwsh
       run: |
+        $venvPath = "$env:GITHUB_WORKSPACE\.venv\Scripts"
+        # Permanent PATH update for all subsequent steps
+        echo "$venvPath" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        # Immediate PATH update for current step
+        $env:PATH = "$venvPath;$env:PATH"
+
+    - name: Verify PATH contains venv
+      shell: pwsh
+      run: |
+        Write-Host "Current PATH: $env:PATH"
         where.exe flake8
         where.exe pytest
 
     - name: Run Linter
-      shell: pwsh
-      run: flake8 src tests  # Now works without activation
+      run: |
+        flake8 src tests
 
     - name: Run Tests
-      shell: pwsh
-      run: pytest --maxfail=1 --disable-warnings
+      run: |
+        pytest --maxfail=1 --disable-warnings
