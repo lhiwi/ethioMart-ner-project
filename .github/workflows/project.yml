@@ -14,12 +14,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Debug
-        shell: pwsh
-        run: |
-          echo "GITHUB_WORKSPACE = $env:GITHUB_WORKSPACE"
-          ls -Recurse
-
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
@@ -30,17 +24,24 @@ jobs:
         run: |
           python -m venv .venv
           .\.venv\Scripts\Activate.ps1
-          pip install --upgrade pip
-          pip install -r requirements.txt
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Debug
+        shell: pwsh
+        run: |
+          .\.venv\Scripts\Activate.ps1
+          echo "PATH = $env:PATH"
+          Get-Command python, flake8, pytest
 
       - name: Lint with Flake8
         shell: pwsh
         run: |
           .\.venv\Scripts\Activate.ps1
-          flake8 src tests
+          python -m flake8 src tests
 
       - name: Run tests
         shell: pwsh
         run: |
           .\.venv\Scripts\Activate.ps1
-          pytest --maxfail=1 --disable-warnings -q
+          python -m pytest --maxfail=1 --disable-warnings -q
