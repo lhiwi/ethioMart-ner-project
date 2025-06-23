@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     strategy:
       matrix:
         python-version: ['3.10', '3.11']
@@ -27,8 +27,10 @@ jobs:
       - name: Lint with Flake8
         run: |
           source .venv/bin/activate
-          python -m flake8 src tests
+          pip install flake8
+          flake8 src tests
       - name: Run tests
         run: |
           source .venv/bin/activate
-          python -m pytest --maxfail=1 --disable-warnings -q
+          pip install pytest
+          pytest --maxfail=1 --disable-warnings -q
