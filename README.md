@@ -19,50 +19,61 @@ This repository implements a pipeline to:
 
 - **Task 2: CoNLL Labeling**  
   From the cleaned corpus, we sampled 50 messages, tokenized them using NLTK’s `WordPunctTokenizer`, and generated a CoNLL template. In VS Code, each token was annotated with `B-Product`/`I-Product`, `B-PRICE`/`I-PRICE`, and `B-LOC`/`I-LOC` tags, producing `data/raw/labels_sample.conll`. Annotation was verified by reloading in Colab to ensure proper formatting and coverage.
+- **Task 3: Fine-Tuning NER Models**  
+- Loaded CoNLL annotations into a Hugging Face `Dataset`.  
+- Token-aligned labels with the `rasyosef/bert-tiny-amharic` model.  
+- Trained for 5 epochs on our 50-message set; observed zero training loss and evaluated on validation split.  
+- Saved the fine-tuned model under `models/final_ner_model/` and downloaded locally.
 
-These completed tasks establish a high-quality dataset and annotation set, ready for Task 3: fine-tuning a transformer-based NER model.
+- **Task 4: Model Comparison & Selection**  
+- Benchmarked four models:  
+  - `bert-tiny-amharic`  
+  - `xlm-roberta-base`  
+  - `distilbert-base-multilingual-cased`  
+  - `bert-base-multilingual-cased` (mBERT)  
+- Fine-tuned each for 3 epochs on the same dataset.  
+- Due to limited sample size, all F1 scores were zero. We therefore compared **training runtime** as a proxy for efficiency.  
+- Plotted training times and selected the fastest model (e.g., `bert-tiny-amharic`) for production deployment.
+
 
 
 ##  Future Work
 
-- **Task 3: Model Fine-Tuning**  
-  Convert `labels_sample.conll` into a Hugging Face `datasets` object, align token-level labels with an XLM-RoBERTa tokenizer, and fine-tune for Amharic NER.
+- **Task 5: Model Interpretability**  
+  Apply SHAP and LIME to explain token-level predictions and build trust in NER outputs.
 
-- **Expand Annotation**  
-  Increase manual labeling from 50 to 200–500 messages to improve model robustness and domain coverage.
-
-- **Media & Metadata Ingestion**  
-  Extend the scraper to download images and documents into `data/raw/media/`, and capture additional metadata (e.g., replies, forwards) for richer feature engineering.
-
-- **Model Comparison & Interpretability**  
-  Evaluate multiple transformer variants (mBERT, DistilBERT) and apply SHAP/LIME to explain model decisions and ensure trust.
-
-- **Vendor Scorecard Development**  
-  Combine NER outputs with engagement metrics (views, posting frequency) to compute lending scores and generate vendor profiles for micro-lending decisions.
+- **Task 6: Vendor Scorecard**  
+  Combine NER-extracted entities with engagement metrics (views, posting frequency) to compute lending scores and visualize vendor rankings.
 
 
 ##  Repository Structure
 
 ```
 ethioMart-ner/
-├── .github/                 # CI workflows (Python-CI)
-├── .vscode/                 # VS Code settings
+├── .github/
+├── .vscode/
 ├── data/
-│   ├── raw/                 # telegram\_data.csv, labels\_sample.conll, media/
-│   └── processed/           # downstream artifacts
-├── notebooks/               # Colab & Jupyter prototypes
-│   ├── 01\_data\_ingestion.ipynb
-│   └── labeling.ipynb
-├── scripts/                 # automated entry-points
-│   └── ingest\_data.py
-├── src/                     # core modules
-│   ├── telegram\_scraper.py
-│   └── preprocessing.py
-├── tests/                   # pytest unit tests
-├── channels\_to\_crawl.xlsx   # list of Telegram channels
-├── requirements.txt         # pinned dependencies
-└── README.md                # project overview & setup
-
+│ ├── raw/
+│ │ ├── telegram_data.csv
+│ │ └── labels_sample.conll
+│ └── processed/
+├── models/
+│ └── final_ner_model/
+├── notebooks/
+│ ├── 01_data_ingestion.ipynb
+│ ├── labeling.ipynb
+│ ├── 03_fine_tune_ner.ipynb
+│ └── 04_model_comparison.ipynb
+├── scripts/
+│ ├── ingest_data.py
+│ └── vendor_scorecard.py
+├── src/
+│ ├── telegram_scraper.py
+│ └── preprocessing.py
+├── tests/
+├── channels_to_crawl.xlsx
+├── requirements.txt
+└── README.md
 ```
 
 ##  Installation & Setup

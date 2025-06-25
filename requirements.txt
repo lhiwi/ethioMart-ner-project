@@ -5,18 +5,22 @@ pytest>=7.0.0
 jupyter>=1.0.0
 ipykernel>=6.0.0
 matplotlib>=3.7.0
+seqeval>=1.2.2
+evaluate>=0.4.0
+torch>=1.13.0 
 
 # Core data-and-scraping
 telethon>=1.28.0
 pandas>=2.0.0
+# python
+nltk
 
 # Text processing
 regex>=2022.10.31
 
 # Transformers & tokenizers (for later tasks)
 transformers>=4.30.0
-datasets>=2.15.0
-
+datasets>=2.15.0   
 # Model interpretability
 shap>=0.42.0
 lime>=0.2.0
@@ -27,5 +31,5 @@ opencv-python>=4.8.0
 
 # Utilities
 python-dotenv>=0.21.0
-+openpyxl>=3.0.0
+openpyxl>=3.0.0
 
